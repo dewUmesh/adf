@@ -1,0 +1,13 @@
+{
+	"name": "blobLinkService",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "This is the link to local blob for reading",
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=feb2021rg1ssa;EndpointSuffix=core.windows.net;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkZFQjIwMjFSRzFBREZfYzA1ODdhNDMtNmMxNC00ZmExLWFkNDktNGYxNTgyZDgxYTk1Ig0KfQ=="
+		}
+	}
+}
