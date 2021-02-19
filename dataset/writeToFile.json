@@ -1,0 +1,30 @@
+{
+	"name": "writeToFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "blobLinkService",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "targets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "gotWrite.csv",
+				"container": "blobdata1"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	}
+}
