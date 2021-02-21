@@ -1,0 +1,20 @@
+{
+	"name": "TestFunctionalities",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "blobLinkService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "ReadFromBlob"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'blobdata1',\n\tfileName: 'got.csv',\n\tcolumnDelimiter: '\\t',\n\tescapeChar: '\\\\',\n\tqutoChar: '\\\"',\n\tcolumnNamesAsHeader: true) ~> ReadFromBlob"
+		}
+	}
+}
