@@ -13,8 +13,24 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'blobdata1',\n\tfileName: 'got.csv',\n\tcolumnDelimiter: '\\t',\n\tescapeChar: '\\\\',\n\tqutoChar: '\\\"',\n\tcolumnNamesAsHeader: true) ~> ReadFromBlob"
+			"transformations": [
+				{
+					"name": "ConditionalSplit1"
+				},
+				{
+					"name": "DerivedColumn1"
+				},
+				{
+					"name": "DerivedColumn2"
+				},
+				{
+					"name": "Union1"
+				},
+				{
+					"name": "Sort1"
+				}
+			],
+			"script": "source(output(\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tID as short,\n\t\tSallary as short,\n\t\tDepartment as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'blobdata1',\n\tfileName: 'got.csv',\n\tcolumnDelimiter: '\\t',\n\tescapeChar: '\\\\',\n\tqutoChar: '\\\"',\n\tcolumnNamesAsHeader: true) ~> ReadFromBlob\nReadFromBlob split(LastName == \"stark\",\n\tdisjoint: false) ~> ConditionalSplit1@(HouseStark, Others)\nConditionalSplit1@HouseStark derive(Code = 1) ~> DerivedColumn1\nConditionalSplit1@Others derive(Code = 2) ~> DerivedColumn2\nDerivedColumn1, DerivedColumn2 union(byName: true)~> Union1\nUnion1 sort(desc(ID, true)) ~> Sort1"
 		}
 	}
 }
