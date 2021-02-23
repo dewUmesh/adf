@@ -5,11 +5,6 @@
 			"referenceName": "SqlDbLinkService",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"Table": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": []
