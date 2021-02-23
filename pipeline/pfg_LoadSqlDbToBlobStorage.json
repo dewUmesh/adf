@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "dfg_LoadSqlDbToCosmosDb",
+				"name": "dfg_LoadSqlDbToBlobStorage",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dfg_LoadSqlDbToCosmosDb",
+						"referenceName": "dfg_LoadSqlDbToBlobStorage",
 						"type": "DataFlowReference"
 					},
 					"compute": {
