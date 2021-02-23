@@ -7,9 +7,6 @@
 		},
 		"annotations": [],
 		"type": "CosmosDbSqlApiCollection",
-		"schema": {},
-		"typeProperties": {
-			"collectionName": "emp-cdb"
-		}
+		"schema": {}
 	}
 }
