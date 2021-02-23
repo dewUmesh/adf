@@ -3,10 +3,26 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQLDBLINKSERVICE",
+						"type": "DatasetReference"
+					},
+					"name": "SqlDbSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "BLOBDATASET",
+						"type": "DatasetReference"
+					},
+					"name": "StorageContainerSink"
+				}
+			],
 			"transformations": [],
-			"script": ""
+			"script": "source(output(\n\t\tdepartment_id as integer,\n\t\tdepartment_name as string,\n\t\tlocation_id as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select * from dbo.departments',\n\tformat: 'query') ~> SqlDbSource\nSqlDbSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['dept.csv'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StorageContainerSink"
 		}
 	}
 }
