@@ -1,0 +1,28 @@
+{
+	"name": "dfg_LoadSqlDbToBlobStorage",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQLDBLINKSERVICE",
+						"type": "DatasetReference"
+					},
+					"name": "SqlDbSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "BLOBDATASET",
+						"type": "DatasetReference"
+					},
+					"name": "BlobFileSink"
+				}
+			],
+			"transformations": [],
+			"script": "parameters{\n\tSourceTableName as string,\n\tSinkFileName as string\n}\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SqlDbSource\nSqlDbSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:[''],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BlobFileSink"
+		}
+	}
+}
