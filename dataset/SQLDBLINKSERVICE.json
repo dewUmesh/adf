@@ -1,0 +1,12 @@
+{
+	"name": "SQLDBLINKSERVICE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlDbLinkService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
