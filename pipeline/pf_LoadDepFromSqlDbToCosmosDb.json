@@ -1,0 +1,6 @@
+{
+	"name": "pf_LoadDepFromSqlDbToCosmosDb",
+	"properties": {
+		"annotations": []
+	}
+}
