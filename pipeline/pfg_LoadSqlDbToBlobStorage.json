@@ -13,7 +13,11 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
+				"userProperties": [
+					{
+						"name": "SourceTable"
+					}
+				],
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dfg_LoadSqlDbToBlobStorage",
