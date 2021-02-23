@@ -1,0 +1,6 @@
+{
+	"name": "pfg_LoadSqlDbToBlobStorage",
+	"properties": {
+		"annotations": []
+	}
+}
