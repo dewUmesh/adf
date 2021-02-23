@@ -1,0 +1,12 @@
+{
+	"name": "df_LoadDepFromSqlDbToContainerFile",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [],
+			"sinks": [],
+			"transformations": [],
+			"script": ""
+		}
+	}
+}
