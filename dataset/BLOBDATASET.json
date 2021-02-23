@@ -12,8 +12,9 @@
 				"type": "AzureBlobStorageLocation",
 				"container": "dccontainer"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "|",
 			"escapeChar": "\\",
+			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
 		"schema": []
