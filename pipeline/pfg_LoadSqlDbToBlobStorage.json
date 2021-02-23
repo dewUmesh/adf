@@ -17,7 +17,17 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dfg_LoadSqlDbToBlobStorage",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"SourceTableName": {
+								"value": "'@{departments}'",
+								"type": "Expression"
+							},
+							"SinkFileName": {
+								"value": "'@{departments1.csv}'",
+								"type": "Expression"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
