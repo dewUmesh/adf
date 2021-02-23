@@ -3,10 +3,30 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
-			"transformations": [],
-			"script": ""
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQLDBLINKSERVICE",
+						"type": "DatasetReference"
+					},
+					"name": "SqlDb"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "BLOBDATASET",
+						"type": "DatasetReference"
+					},
+					"name": "StorageContainerSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SurrogateKey1"
+				}
+			],
+			"script": "source(output(\n\t\temployee_id as integer,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tphone_number as string,\n\t\thire_date as date,\n\t\tjob_id as integer,\n\t\tsalary as decimal(8,2),\n\t\tmanager_id as integer,\n\t\tdepartment_id as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tinferDriftedColumnTypes: true,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from dbo.employees',\n\tformat: 'query') ~> SqlDb\nSqlDb keyGenerate(output(Skey as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['emp.csv'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StorageContainerSink"
 		}
 	}
 }
