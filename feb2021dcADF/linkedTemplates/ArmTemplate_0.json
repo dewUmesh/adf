@@ -184,6 +184,176 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_LoadDepFromSqlDbToContainerFile')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQLDBLINKSERVICE",
+								"type": "DatasetReference"
+							},
+							"name": "SqlDbSource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "BLOBDATASET",
+								"type": "DatasetReference"
+							},
+							"name": "StorageContainerSink"
+						},
+						{
+							"linkedService": {
+								"referenceName": "BLOBLINKSERVICEDC",
+								"type": "LinkedServiceReference"
+							},
+							"name": "StorageAvroSink"
+						}
+					],
+					"transformations": [],
+					"script": "source(output(\n\t\tdepartment_id as integer,\n\t\tdepartment_name as string,\n\t\tlocation_id as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select * from dbo.departments',\n\tformat: 'query') ~> SqlDbSource\nSqlDbSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['dept.csv'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StorageContainerSink\nSqlDbSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'avro',\n\tcontainer: 'dccontainer',\n\tcompressionType: 'none',\n\tpartitionFileNames:['depAvro'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StorageAvroSink"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQLDBLINKSERVICE')]",
+				"[concat(variables('factoryId'), '/datasets/BLOBDATASET')]",
+				"[concat(variables('factoryId'), '/linkedServices/BLOBLINKSERVICEDC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pf_LoadDepFromSqlDbToContainerFile')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select * from dbo.departments",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "department_id",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"type": "Int32",
+											"physicalType": "Int32",
+											"ordinal": 1
+										}
+									},
+									{
+										"source": {
+											"name": "department_name",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 2
+										}
+									},
+									{
+										"source": {
+											"name": "location_id",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"type": "Int32",
+											"physicalType": "Int32",
+											"ordinal": 3
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLDBLINKSERVICE",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BLOBDATASET",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQLDBLINKSERVICE')]",
+				"[concat(variables('factoryId'), '/datasets/BLOBDATASET')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LoadDataFromSqlDbToStorageContainer')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
