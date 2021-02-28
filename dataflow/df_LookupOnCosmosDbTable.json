@@ -9,19 +9,23 @@
 						"referenceName": "BLOBLINKSERVICEDC",
 						"type": "LinkedServiceReference"
 					},
-					"name": "source1"
+					"name": "ReadFromCsv"
 				},
 				{
 					"dataset": {
 						"referenceName": "CosmosDbSqlLinkService",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "ReadDepTableFromCosmos"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'dccontainer',\n\tfileName: 'dept.csv',\n\tcolumnDelimiter: '|',\n\tescapeChar: '\\\\',\n\tqutoChar: '\\\"',\n\tcolumnNamesAsHeader: true) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'document') ~> source2"
+			"transformations": [
+				{
+					"name": "Lookup1"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'dccontainer',\n\tfileName: 'dept.csv',\n\tcolumnDelimiter: '|',\n\tescapeChar: '\\\\',\n\tqutoChar: '\\\"',\n\tcolumnNamesAsHeader: true) ~> ReadFromCsv\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'document') ~> ReadDepTableFromCosmos\nReadFromCsv, ReadDepTableFromCosmos lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tmultiple: false,\n\tpickup: 'first',\n\tasc(ERROR_FUNCTION(''), true),\n\tbroadcast: 'auto')~> Lookup1"
 		}
 	}
 }
